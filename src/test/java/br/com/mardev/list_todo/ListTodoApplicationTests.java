@@ -7,7 +7,7 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 
 import br.com.mardev.list_todo.entity.Todo;
 
-@SpringBootTest
+@SpringBootTest()
 class ListTodoApplicationTests {
 
 	@Autowired
@@ -16,6 +16,23 @@ class ListTodoApplicationTests {
 	@Test
 	void testCreateTodoSuccess() {
 		var todo = new Todo("todo 01", "desc todo 1", false, 1);
+
+		webTestClient
+			.post()
+			.uri("/v1/todos")
+			.bodyValue(todo)
+			.exchange()
+			.expectStatus().isOk()
+			.expectBody()
+			.jsonPath("$").isArray()
+			.jsonPath("$.lenght").isEqualTo(1)
+			.jsonPath("$[0].nome").isEqualTo(todo.getNome())
+			.jsonPath("$[0].descricao").isEqualTo(todo.getDescricao())
+			.jsonPath("$[0].realizado").isEqualTo(todo.isRealizado())
+			.jsonPath("$[0].prioridade").isEqualTo(todo.getPrioridade());
+
+
+
 	}
 
 	@Test
