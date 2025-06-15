@@ -36,6 +36,13 @@ class ListTodoApplicationTests {
 
 	@Test
 	void testCreateTodoFailure() {
-	}
+		webTestClient
+				.post()
+				.uri("/v1/todos")
+				.bodyValue(
+						new Todo("", "", false, 0))
+				.exchange()
+				.expectStatus().isBadRequest();
 
+	}
 }
